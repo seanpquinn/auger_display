@@ -1,0 +1,41 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<title> Auger Event Viewer </title>
+    <link href="css/style.css" type="text/css" rel="stylesheet" />
+</head>
+
+<body onmousemove="canceltimer()" onclick="canceltimer()" oncontextmenu="return false">
+
+
+<script type="text/javascript">
+
+var tim = 0;
+function reload() {
+tim = setTimeout(redirect,300000);   // 5 minutes
+}
+
+function redirect() {
+ window.location="index.html"
+}
+
+function canceltimer() {
+window.clearTimeout(tim);  // cancel the timer on each mousemove/click
+reload();  // and restart it
+}
+
+</script>
+
+<h1>Astroparticle Physics with the Pierre Auger Observatory at CWRU</h1>
+<h2>THIS PAGE WILL AUTOMATICALLY CLOSE AFTER 5 MINUTES OF INACTIVITY.</h2>
+<h2>MOVE TRACKBALL TO PREVENT THIS FROM HAPPENING.</h2>
+<h2><a href="index.html">GO BACK TO HOME</a></h2>
+<br>
+
+<div style="width: 1200px; height: 1400px; margin: 0 auto;">
+<iframe src="http://auger.colostate.edu/ED/" sandbox="allow-scripts" width="1200" height="1400">
+</iframe>
+</div>
+<iframe frameborder="0" width="0" height="0" src="php/viewer.php"></iframe>
+</body>
+</html>
