@@ -12,8 +12,9 @@ Here you'll find all the necessary code and instructions to install your own vis
    * Ethernet network adapter
    * Preferably HDMI video output
    * OFC audio jacks
-   * 4GB USB thumb drive
-   
+ * 4GB USB thumb drive
+ * Trackwheel or keyboard with touchpad: a device whose right click can be disabled is essential to prevent tampering with the web browser.
+ 
 ## Installing the operating system
 
 Our kiosk uses Ubuntu Server available at http://www.ubuntu.com/download/server
@@ -65,7 +66,7 @@ sudo apt install --no-install-recommends xorg openbox google-chrome-stable pulse
 Now install additional packages required for our version of the kiosk
 
 ```
-sudo apt-get install python3 python3-numpy python3-matlotplib apache2 php5 squid git
+sudo apt-get install python3 python3-numpy python3-matlotplib apache2 php5 squid git fail2ban xscreensaver
 ```
 
 Add user to audio group
@@ -88,4 +89,149 @@ The start up script which launches the X window and Chrome browser is ```scripts
 sudo cp scripts/kiosk.sh opt/; sudo chmod 755 /opt/kiosk.sh
 ```
 
-Next we need to copy the 
+Next copy the upstart script used to execute the previous script on start up. IMPORTANT: please replace the variable ```$USER``` with your username!
+
+```
+sudo cp config/kiosk.conf /etc/init/
+```
+
+Next we need to copy the web files. Since our kiosk needs to run very simple PHP scripts that collect statistics about page visits, we need to have the pages served by Apache.
+
+First remove the default ```index.html``` page.
+
+```
+sudo rm /var/www/html/index.html
+```
+
+Copy the files to this directory
+
+```
+sudo cp -r display/* /var/www/html; sudo cp index.html /var/www/html
+```
+
+Now we need to make some group and ownership adjustments.
+
+```
+cd /var/www/html
+sudo chgrp www-data display/; sudo chmod 755 display/; cd display
+sudo chgrp www-data css/ img/ js/ php/ stats/ stats/*
+sudo chmod 755 css/ img/ js/ php/; sudo chmod 776 stats/
+sudo chmod 611 stats/master_log.txt; sudo chmod 755 sh/daily_accum.sh
+```
+
+At this point the base kiosk system is installed. Next we're going to add some convenience and security utilities.
+
+## Installing and configuring the web proxy server
+
+Since 2 of the sub pages in the kiosk are embedded web pages a proxy server is used to prevent users from following external links in these pages. When a user follows an external link the connection is intercepted and presented with an "access denied" page. This is also true when a user attempts to download files which otherwise would open a Chrome download dialog.
+
+The proxy server ```squid``` was installed in an earlier step. After some experimentation we've built a customized list of rules to prevent users from visiting links that might compromise the kiosk. These files are stored in ```config/squid/```. Place these in ```/etc/squid3/``` with
+
+```
+sudo cp config/squid/* /etc/squid3
+```
+
+This server will run on localhost using default port 3128. It should start automatically after a reboot (which we will do eventually). If you ever need to manually start or restart, use
+
+```
+sudo service start squid3
+```
+
+## Installing Dropbox
+
+When the kiosk is in idle mode it is configured to display images linked to a Dropbox account. In our case, this set up allows secretaries to easily upload department info about events, colloquiums or directories.
+
+Dropbox provides useful instructions for installing their software on a headless machine https://www.dropbox.com/install?os=lnx and linking it to your account. Make sure you have the Dropbox user credentials handy for this step.
+
+We also take advantage of their supplied Python script to start the daemon. We can run their script by making a simple shell script to be executed by upstart
+
+```
+sudo touch /opt/dropboxd.sh
+sudo chmod 755 /opt/dropboxd.sh
+```
+
+And add these two lines
+
+```
+#!/bin/bash
+
+python /home/$USER/dropbox.py start
+```
+
+where ```$USER``` is your username.
+
+Assuming the Dropbox Python script was downloaded to your home directory. If not, put the appropriate directory after the ```python``` command.
+
+Next create the upstart script to execute this script
+
+```
+sudo touch /etc/init/dropboxd.conf
+```
+
+and fill it with
+
+```
+start on (filesystem and stopped udevtrigger)
+stop on runlevel [06]
+
+console output
+
+exec sudo -u $USER bash /opt/dropboxd.sh --
+```
+
+where ```$USER``` is your username.
+
+Now the daemon will start at boot and automatically sync the Dropbox account with the display machine.
+
+## Configuring xscreensaver
+
+Now let's set up the screen saver to display images from the Dropbox folder when the kiosk is idle. This is easiest to do using the ```xscreensaver-demo``` GUI. Before proceeding, if you are currently setting up the kiosk over ssh, disconnect and then reconnect with X forwarding: ```ssh -X user@host```
+
+Once connected run
+
+```
+xscreensaver-demo
+```
+
+and customize the screen saver to your liking.
+
+## Setting up cron jobs
+
+The kiosk system comes with with scripts that log usage statistics. In order to collect these daily, we will edit the crontab to execute the scripts every 24 hours.
+
+```
+crontab -e
+```
+
+insert the following lines to update statistics everyday at 20 hours local time
+
+```
+00 20 * * * /var/www/html/display/sh/daily_accum.sh
+02 20 * * * /usr/bin/python3 /var/www/html/display/py/plot_usage.py
+```
+
+Assuming your machine has been correctly set up on your network with a given domain name, you can access the stats page at ```host.com/index.html```
+
+## Reboot
+
+To bring up a fresh kiosk reboot your machine
+
+```
+sudo reboot
+```
+
+Enjoy!
+
+## Feedback
+
+All feedback, favorable or critical, is welcomed for this project. Feedback which points out errors or bugs is especially helpful. Design suggestions and ways to make the display more user friendly are also encouraged!
+
+The author can be reached at spq@case.edu
+
+Thanks for reading
+
+
+
+
+
+
