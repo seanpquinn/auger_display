@@ -86,7 +86,7 @@ sudo usermod -a -G audio $USER
 Next clone this repository to a convenient location
 
 ```
-git clone git@github.com:seanpquinn/auger_display.git
+git clone https://github.com/seanpquinn/auger_display.git
 ```
 
 ## Installing the kiosk
