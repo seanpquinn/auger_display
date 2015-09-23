@@ -207,6 +207,8 @@ and customize the screen saver to your liking.
 
 The kiosk system comes with with scripts that log usage statistics. In order to collect these daily, we will edit the crontab to execute the scripts every 24 hours.
 
+As root
+
 ```
 crontab -e
 ```
