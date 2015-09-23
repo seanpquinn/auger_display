@@ -2,6 +2,14 @@
 
 Here you'll find all the necessary code and instructions to install your own visitor kiosk. This kiosk uses a variety of publicly available resources and also records statistics about which pages user visit. These instructions assume the user is working on a Linux based desktop. Moderate Linux/command line skill also assumed. Let's get started.
 
+The finished product should resemble something like this
+
+![](http://headisplay.student.cwru.edu/display/img/display_scrnshot.png)
+
+And the statistics page, which has a plot that corresponds to each tile on the display page, will look like this
+
+![](http://headisplay.student.cwru.edu)
+
 ## Hardware 
 
  * Large computer monitor or television
