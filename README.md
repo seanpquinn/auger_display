@@ -8,7 +8,7 @@ The finished product should resemble something like this
 
 And the statistics page, which has a plot that corresponds to each tile on the display page, will look like this
 
-![](http://headisplay.student.cwru.edu)
+![](http://headisplay.student.cwru.edu/display/img/page_stats.png)
 
 ## Hardware 
 
