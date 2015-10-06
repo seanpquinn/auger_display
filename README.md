@@ -197,10 +197,10 @@ and customize the screen saver to your liking.
 
 ## Setting up cron jobs
 
-The kiosk system comes with with scripts that log usage statistics. In order to collect these daily, we will edit the crontab to execute the scripts every 24 hours.
+The kiosk system comes with with scripts that log usage statistics. In order to collect these daily, we will edit the crontab (as root) to execute the scripts every 24 hours.
 
 ```
-crontab -e
+sudo crontab -e
 ```
 
 insert the following lines to update statistics everyday at 20 hours local time
