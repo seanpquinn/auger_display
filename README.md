@@ -2,6 +2,14 @@
 
 Here you'll find all the necessary code and instructions to install your own visitor kiosk. This kiosk uses a variety of publicly available resources and also records statistics about which pages user visit. These instructions assume the user is working on a Linux based desktop. Moderate Linux/command line skill also assumed. Let's get started.
 
+The finished product should resemble something like this
+
+![](http://headisplay.student.cwru.edu/display/img/display_scrnshot.png)
+
+And the statistics page, which has a plot that corresponds to each tile on the display page, will look like this
+
+![](http://headisplay.student.cwru.edu/display/img/page_stats.png)
+
 ## Hardware 
 
  * Large computer monitor or television
@@ -78,7 +86,7 @@ sudo usermod -a -G audio $USER
 Next clone this repository to a convenient location
 
 ```
-git clone git@github.com:seanpquinn/auger_display.git
+git clone https://github.com/seanpquinn/auger_display.git
 ```
 
 ## Installing the kiosk
@@ -198,6 +206,8 @@ and customize the screen saver to your liking.
 ## Setting up cron jobs
 
 The kiosk system comes with with scripts that log usage statistics. In order to collect these daily, we will edit the crontab (as root) to execute the scripts every 24 hours.
+
+As root
 
 ```
 sudo crontab -e

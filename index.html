@@ -3,11 +3,25 @@
 
 <head>
 <title> Kiosk statistics </title>
-<link href="display/css/style.css" type="text/css" rel="stylesheet" />
+<link href="display/css/stat_style.css" type="text/css" rel="stylesheet" />
 </head>
 
 <body oncontextmenu="return false">
 <h1>This page updated daily</h1>
-<img src="display/img/page_stats.png">
+<img class="center fit" src="display/img/page_stats.png">
+<!-- auto sizing solution borrowed from 
+http://stackoverflow.com/questions/6169666/how-to-resize-an-image-to-fit-in-the-browser-window
+thank you sebnukem
+-->
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+<script type="text/javascript" language="JavaScript">
+  function set_body_height() { // set body height = window height
+    $('body').height($(window).height());
+  }
+  $(document).ready(function() {
+    $(window).bind('resize', set_body_height);
+    set_body_height();
+  });
+</script>
 </body>
 </html>
