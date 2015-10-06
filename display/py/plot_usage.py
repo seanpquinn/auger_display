@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from matplotlib.dates import DayLocator, MonthLocator, DateFormatter, date2num
 import numpy as np
 
-fpath = "../stats/master_log.txt"
+fpath = "/var/www/html/display/stats/master_log.txt"
 cnt = np.loadtxt(fpath,usecols=(0,1,2,3,4,5,6,7,8,9))
 rawdates = np.loadtxt(fpath,usecols=(10,),dtype=np.str)
 
